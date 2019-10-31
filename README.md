@@ -25,13 +25,15 @@ r2, 23, %34 -> 0x02 | 0x00 0x17 | 0x00 0x00 0x00 0x22
 // Complete instruction to machine code, for instance:
 sti r1,\%:live,\%1 ->  0x0b,      0x68,     0x01,0x00,0x0f,0x00,0x01
                     ins_code | coding byte | r1 | \%:live |   \%1
-and r1,\%0,r1 -> 0x06,      0x64,      0x01,0x00,0x00,0x00,0x00,0x01
-               ins_code | coding byte | r1 |        \%0        | r1
+                    
+and r1,\%0,r1 ->  0x06,      0x64,      0x01,0x00,0x00,0x00,0x00,0x01
+                ins_code | coding byte | r1 |        \%0        | r1
 ```
 
 ### pesudo
 Champion: hold instructions<br>
-VM -> encode instruction to machine code
+asm: encode instruction to machine code<br>
+vm: read machine code and execute the game
 
 
 ### Reference
