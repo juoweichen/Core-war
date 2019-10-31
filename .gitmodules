@@ -1,0 +1,4 @@
+[submodule "Core-war"]
+	path = Core-war
+	url = https://github.com/pootitan/Core-war
+	branch = master
