@@ -40,3 +40,4 @@ vm: read machine code and execute the game
 [Using submodules in Git - Tutorial](https://www.vogella.com/tutorials/GitSubmodules/article.html)<br>
 [Core war wiki](https://en.wikipedia.org/wiki/Core_War)<br>
 [Introduction to Core War](http://vyznev.net/corewar/guide.html#introduction)<br>
+[Cookbook](https://github.com/VBrazhnik/Corewar/wiki)<br>

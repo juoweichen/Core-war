@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 # project bin file
-NAME = core_war
+NAME = asm
 
 # debugger bin file
 D_NAME = dbgr
@@ -30,7 +30,8 @@ W_FLAG = -Wall -Werror -Wextra
 
 # src section
 SRC_DIR = srcs
-SRCS += $(wildcard $(SRC_DIR)/*.c)
+SRCS = $(wildcard $(SRC_DIR)/*.c)
+SRCS += $(wildcard $(SRC_DIR)/asm/*.c)
 
 .PHONY: all clean fclean re qre
 
