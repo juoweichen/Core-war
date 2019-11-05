@@ -12,6 +12,30 @@
 
 #include "../../includes/asm.h"
 
+void	write_cor()
+{
+	int fd = 0;
+
+	if ((fd = open("test.cor", O_RDWR | O_CREAT | O_APPEND | O_TRUNC)) == -1)
+	{
+		perror("Create fails");
+		exit(0);
+	}
+	int h1 = 0x0b;
+	int h2 = 0x68;
+	int h3 = 0x01;
+	int h4 = 0x0007;
+	int h5 = 0x0001;
+	
+	write(fd, &h1, 1);
+	write(fd, &h2, 1);
+	write(fd, &h3, 2);
+	write(fd, &h4, 2);
+	write(fd, &h5, 2);
+
+	close(fd);
+}
+
 void	read_champ(char *champ)
 {
 	int fd;
@@ -41,6 +65,9 @@ int main(int argc, char **argv)
 		// parse_champ();
 		// store to .cor file
 		// release_champ();
+
+		// test write to file
+		write_cor();
 	}
 	else
 		ft_printf("usage: ./asm <your_champ.s>\n");
