@@ -32,6 +32,7 @@ W_FLAG = -Wall -Werror -Wextra
 SRC_DIR = srcs
 SRCS = $(wildcard $(SRC_DIR)/*.c)
 SRCS += $(wildcard $(SRC_DIR)/asm/*.c)
+SRCS +=	$(wildcard $(SRC_DIR)/lexer/*.c)
 
 .PHONY: all clean fclean re qre
 

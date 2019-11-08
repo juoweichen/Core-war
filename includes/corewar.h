@@ -13,7 +13,9 @@
 #ifndef COREWAR_H
 # define COREWAR_H
 
+# include "op.h"
 # include "asm.h"
 # include "vm.h"
+# include "lexer.h"
 
 #endif
