@@ -10,8 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/lexer.h"
-
+# include "../../includes/asm.h"
+# include "../../includes/lexer.h"
+# include "../../includes/op.h"
 /*
 **	Get token data		[✓]
 **	Get token type		[✓]
@@ -37,14 +38,12 @@
 **		beforehand. If whitespace is not skipped NULL will be returned
 */
 
-static t_token		*get_token(char *input)
+static t_token		*get_token(char *input, t_asm *asms)
 {
-	if (is_operator(*input) == TRUE)
-		return (get_operator_token(input));
-	else if (is_quote(*input) == TRUE)
+	if (is_quote(*input) == TRUE)
 		return (get_quote_token(input));
-	else if (ft_isspace(*input) == FALSE)
-		return (get_generic_token(input)); 
+	else if (!ft_isspace(*input) && !ft_iscomment(*input))
+		return (get_generic_token(input, asms));
 	else
 		return (NULL);
 }
@@ -63,7 +62,7 @@ static t_token		*get_token(char *input)
 **	- returns the queue of tokens
 */
 
-t_token				*tokenize(char *input)
+t_token				*tokenize(char *input, t_asm *asms)
 {
 	t_token			*token_list;
 	t_token			*cur;
@@ -73,17 +72,18 @@ t_token				*tokenize(char *input)
 	token_list = NULL;
 	while (input[i] != '\0')
 	{
-		while (input[i] != '\0' && ft_isspace(input[i]) == TRUE)
+		while (input[i] != '\0' && (ft_isspace(input[i]) == TRUE ||
+			input[i] == SEPARATOR_CHAR))
 			i++;
 		if (input[i] == '\0')
 			break ;
 		if (token_list == NULL)
 		{
-			token_list = get_token(input + i);
+			token_list = get_token(input + i, asms);
 			cur = token_list;
 		}
 		else
-			cur->next = get_token(input + i);
+			cur->next = get_token(input + i, asms);
 		if (cur->next != NULL)
 			cur = cur->next;
 		i += ft_strlen(cur->data);

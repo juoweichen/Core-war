@@ -15,6 +15,7 @@
 
 # include <unistd.h>
 # include "../libft/includes/libft.h"
+# include "comman.h"
 
 /*
 **	Dont actually need command sub, that will be evaluated later
@@ -53,18 +54,11 @@
 # define OP_AND_QT_TOKS	";$|&<>\"\'`"
 # define DBL_TOK_OFFSET	7
 
-typedef struct			s_token
-{
-	int					type;
-	char				*data;
-	struct s_token		*next;
-}						t_token;
-
 /*
 **	lexer.c
 */
 
-t_token					*tokenize(char *input);
+t_token					*tokenize(char *input, t_asm *asms);
 
 /*
 **	tokens.c
@@ -73,6 +67,7 @@ t_token					*tokenize(char *input);
 t_token					*new_token(char *data, int type);
 void					free_token(t_token *token);
 void					free_token_list(t_token *token_list);
+t_token					*new_ins_token(char *data, t_asm *asms);
 
 /*
 **	types.c
@@ -80,7 +75,7 @@ void					free_token_list(t_token *token_list);
 
 t_token					*get_operator_token(char *input);
 t_token					*get_quote_token(char *input);
-t_token					*get_generic_token(char *input);
+t_token					*get_generic_token(char *input, t_asm *asms);
 
 /*
 **	utils.c
@@ -89,5 +84,15 @@ t_token					*get_generic_token(char *input);
 int						is_quote(char c);
 int						is_operator(char c);
 int						ft_isspace(char c);
+int						ft_iscomment(char c);
+void					print_token(t_token	*token);	
+
+/*
+**	is_ins.c
+*/
+int 	is_label(char *data);
+int		is_operation(char *data, t_asm *asms);
+int		is_register(char *data);
+int		is_direct_mem(char *data);
 
 #endif

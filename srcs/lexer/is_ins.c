@@ -14,47 +14,53 @@
 # include "../../includes/lexer.h"
 # include "../../includes/op.h"
 
-/*
-**	The below operations return TRUE or FALSE depending on if the given
-**	character matches any of the characters in the given static strings
-*/
-int					is_quote(char c)
+int 	is_label(char *data)
 {
-	if (ft_strchr("\"\'`", c) != NULL)
-		return (TRUE);
-	return (FALSE);
-}
+	int i;
+	int len;
 
-int					is_operator(char c)
-{
-	if (ft_strchr(";|&<>", c) != NULL)
-		return (TRUE);
-	return (FALSE);
-}
-
-int					ft_isspace(char c)
-{
-	if (ft_strchr(" \t\n", c) != NULL)
-		return (TRUE);
-	return (FALSE);
-}
-
-int					ft_iscomment(char c)
-{
-	if (c == COMMENT_CHAR)
-		return (TRUE);
-	return (FALSE);
-}
-
-void	print_token(t_token	*token)
-{
-	t_token	*tptr;
-	
-	tptr = token;
-	while (tptr != NULL)
+	if (data == NULL)
+		return (FALSE);
+	len = ft_strlen(data);
+	i = 0;
+	while (i < len - 1)
 	{
-		printf("%s(%d)->", tptr->data, tptr->type);
-		tptr = tptr->next;
+		if (ft_strchr(LABEL_CHARS, data[i++]) == NULL)
+			return (FALSE);
 	}
-	printf("\n");
+	if (data[i] != LABEL_CHAR)
+		return (FALSE);
+	return (TRUE);
 }
+
+int		is_operation(char *data, t_asm *asms)
+{
+	if (data == NULL)
+		return (FALSE);
+	if (dict_get(asms->op_dict, data) != NULL)
+		return (TRUE);
+	return (FALSE);
+}
+
+int		is_register(char *data)
+{
+	if (data == NULL)
+		return (FALSE);
+	if (*data != REGISTER_CHAR)
+		return (FALSE);
+	data += 1;
+	if (!ft_isdigit_str(data) || ft_atoi(data) > REG_NUMBER)
+		return (FALSE);
+	return (TRUE);
+}
+
+int		is_direct_mem(char *data)
+{
+	if (data == NULL)
+		return (FALSE);
+	if (*data != DIRECT_CHAR)
+		return (FALSE);
+	return (TRUE);
+}
+
+

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   op.h                                               :+:      :+:    :+:   */
+/*   asm.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zaz <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,12 +10,28 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef COREWAR_H
-# define COREWAR_H
+# include "../../includes/asm.h"
+# include "../../includes/lexer.h"
+# include "../../includes/op.h"
 
-# include "op.h"
-# include "asm.h"
-# include "vm.h"
-# include "lexer.h"
+void	print_format(t_asm *asms)
+{
+	t_format *f;
+	int i;
 
-#endif
+	while (!qis_empty(asms->formats))
+	{
+		f = qpop(asms->formats);
+		if (f == NULL)
+			continue ;
+		printf("label: %s", f->label);
+		if (f->op != NULL)
+		{
+			printf(" | op: %s | args: ", f->op);
+			i = 0;
+			while (f->args[i] != NULL)
+				printf("%s, ", f->args[i++]->data);
+		}
+		printf(" | address: %d | bsize: %d\n", f->address, f->bsize);
+	}
+}

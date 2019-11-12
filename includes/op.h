@@ -38,6 +38,7 @@
 #define LABEL_CHAR				':'
 #define DIRECT_CHAR				'%'
 #define SEPARATOR_CHAR			','
+#define REGISTER_CHAR			'r'
 
 #define LABEL_CHARS				"abcdefghijklmnopqrstuvwxyz_0123456789"
 
@@ -61,6 +62,8 @@
 # define PROG_NAME_LENGTH		(128)
 # define COMMENT_LENGTH			(2048)
 # define COREWAR_EXEC_MAGIC		0xea83f3
+# define MAGIC_LENGTH			(4)
+
 
 typedef struct  s_header
 {
@@ -80,6 +83,7 @@ typedef char	t_arg_type;
 #define T_DIR					2
 #define T_IND					4
 #define T_LAB					8
+#define T_OP					16
 /*
 **  op.c
 */

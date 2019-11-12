@@ -10,7 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/lexer.h"
+# include "../../includes/asm.h"
+# include "../../includes/lexer.h"
+# include "../../includes/op.h"
 
 /*
 **	get_shift()
@@ -167,23 +169,17 @@ t_token				*get_quote_token(char *input)
 **		6b. token type is of STRING_TOKEN
 */
 
-t_token				*get_generic_token(char *input)
+t_token				*get_generic_token(char *input, t_asm *asms)
 {
-	int				valid_num;
 	int				i;
 
 	i = (*input == '+' || *input == '-') ? 1 : 0;
-	valid_num = (input[i] != '\0') ? TRUE : FALSE;
 	while (input[i] != '\0')
 	{
 		if (is_operator(input[i]) == TRUE || is_quote(input[i]) == TRUE
-			|| ft_isspace(input[i]) == TRUE)
+			|| ft_isspace(input[i]) == TRUE || input[i] == SEPARATOR_CHAR)
 			break ;
-		if (valid_num == TRUE && !ft_isdigit(input[i]))
-			valid_num = FALSE;
 		i++;
 	}
-	if (valid_num == TRUE)
-		return (new_token(ft_strndup(input, i), NUMBER_TOKEN));
-	return (new_token(ft_strndup(input, i), STRING_TOKEN));
+	return (new_ins_token(ft_strndup(input, i), asms));
 }

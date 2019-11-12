@@ -10,7 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/lexer.h"
+# include "../../includes/asm.h"
+# include "../../includes/lexer.h"
+# include "../../includes/op.h"
 
 t_token				*new_token(char *data, int type)
 {
@@ -51,4 +53,18 @@ void				free_token_list(t_token *token_list)
 			token_list = next;
 		}
 	}
+}
+
+t_token		*new_ins_token(char *data, t_asm *asms)
+{
+	if (is_label(data))
+		return (new_token(data, T_LAB));
+	else if (is_operation(data, asms))
+		return (new_token(data, T_OP));
+	else if (is_register(data))
+		return (new_token(data, T_REG));
+	else if (is_direct_mem(data))
+		return (new_token(data, T_DIR));
+	else
+		return (new_token(data, T_IND));
 }
