@@ -13,6 +13,18 @@
 # include "../../includes/asm.h"
 # include "../../includes/op.h"
 
+/*
+**	create_optable()
+**	Store op table as an array in asms
+**	
+**	input: 
+**		<t_asm>	asm main structure
+**	return: 
+**		void
+**	
+**	1. grap op array from op.c
+**	2. memcpy to asms op table
+*/
 void 	create_optable(t_asm *asm_s)
 {
 	t_op	op_tab[OP_NUM] =
@@ -44,14 +56,25 @@ void 	create_optable(t_asm *asm_s)
 	ft_memcpy(asm_s->op_table, op_tab, sizeof(t_op) * OP_NUM);
 }
 
+/*
+**	init_asm()
+**	bzero main structure asms, create op dictionary
+**	Instead of op table, we use op dictionary for searching op info.
+**	
+**	input: 
+**		<t_asm>	asm main structure
+**	return: 
+**		void
+**	
+**	1. bzero asms
+**	2. Store op table to asm
+**	3. Turn op table to op dictionary
+*/
 void init_asm(t_asm *asm_s)
 {
 	int i;
 
-	// init asm_s
 	ft_bzero(asm_s, sizeof(t_asm));
-
-	// store op table
 	create_optable(asm_s);
 	
 	// store op table to dict
