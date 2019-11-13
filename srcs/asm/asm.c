@@ -49,7 +49,7 @@ char *champ_encoder(char *champ, t_asm *asms)
 	str = ft_strnew(slen);
 	pos = str;
 	head_encoder(&pos, asms);
-	ins_encoder(&pos asms);
+	ins_encoder(&pos, asms);
 	write(fd, str, slen);
 	close(fd);
 	return (NULL);

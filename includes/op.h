@@ -97,8 +97,8 @@ typedef struct			s_op
 	unsigned char		opcode;
 	unsigned int		cycle;
 	char				*description;
-	unsigned char		octal;
-	unsigned char		label;
+	unsigned char		code_bytes;
+	unsigned char		dir_size;
 }						t_op;
 
 #endif
