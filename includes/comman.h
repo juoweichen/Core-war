@@ -29,6 +29,7 @@ typedef struct	s_asm
 	t_dict		*op_dict;			// dictionary
 	t_header	header;
 	t_queue		*formats;			// format queue
+	t_dict		*label_dict;		// label : address
 	int			champ_size;
 }				t_asm;
 

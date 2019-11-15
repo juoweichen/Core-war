@@ -120,3 +120,7 @@ char	*get_champ_name(int fd, t_asm *asms)
 }
 
 // Check header, TODO: order doesn't matter
+// if this line is name: save to name
+// if this line is comment: save to commemnt
+// if name and comment are saved, return success
+// if lost one or two, return fail

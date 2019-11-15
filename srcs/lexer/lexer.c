@@ -42,7 +42,7 @@ static t_token		*get_token(char *input, t_asm *asms)
 {
 	if (is_quote(*input) == TRUE)
 		return (get_quote_token(input));
-	else if (!ft_isspace(*input) && !ft_iscomment(*input))
+	else if (!ft_isspace(*input))
 		return (get_generic_token(input, asms));
 	else
 		return (NULL);
@@ -75,7 +75,7 @@ t_token				*tokenize(char *input, t_asm *asms)
 		while (input[i] != '\0' && (ft_isspace(input[i]) == TRUE ||
 			input[i] == SEPARATOR_CHAR))
 			i++;
-		if (input[i] == '\0')
+		if (input[i] == '\0' || input[i] == '#')
 			break ;
 		if (token_list == NULL)
 		{

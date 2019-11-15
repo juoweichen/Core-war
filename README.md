@@ -30,6 +30,22 @@ and r1,\%0,r1 ->  0x06,      0x64,      0x01,0x00,0x00,0x00,0x00,0x01
                 ins_code | coding byte | r1 |        \%0        | r1
 ```
 
+### Batman
+```
+.name       "Batman"
+.comment    "This city needs me"
+
+loop: sti r1, %:live, %1
+
+live:
+        live %0
+        ld %0, r2
+        zjmp %:loop
+
+# 0b68 0100 0700 0101 0000 0000 0290 0000
+# 0000 0209 ffed 
+```
+
 ### pesudo
 Champion: hold instructions<br>
 asm: encode instruction to machine code<br>

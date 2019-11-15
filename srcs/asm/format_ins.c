@@ -26,10 +26,11 @@
 **		errlog, null if no error 
 **	
 **	1. get opinfo from op_dict
+**	2. add bsize, +1 op & +1 byte code(if opinfo->code_bytes == 1)
 **	2. malloc args' spaces in format
 **	3. validate arguments
 **	4. Store those arguments with type to target format
-**	5. add bsize
+**	5. add bsize, if token is T_DIR, replace with the opinfo->dir_size
 */
 char	*put_argus_to_format(t_token *token, t_format *format, t_dict *op_dict)
 {
@@ -39,8 +40,9 @@ char	*put_argus_to_format(t_token *token, t_format *format, t_dict *op_dict)
 	if (token == NULL)
 		return ("operation no arguments");
 	opinfo = dict_get(op_dict, format->op);
+	format->bsize += 1 + opinfo->code_bytes;
 	arg_num = 0;
-	format->args = (t_argu **)ft_memalloc(sizeof(t_argu *) * (opinfo->nb_arg + 1));
+	format->args = (t_argu **)ft_memalloc(sizeof(t_argu *) * (4 + 1));
 	while (token != NULL)
 	{
 		if (token->next == NULL && arg_num + 1 < opinfo->nb_arg)
@@ -52,7 +54,8 @@ char	*put_argus_to_format(t_token *token, t_format *format, t_dict *op_dict)
 		format->args[arg_num] = (t_argu *)ft_memalloc(sizeof(t_argu));
 		format->args[arg_num]->type = token->type;
 		format->args[arg_num]->data = ft_strdup(token->data);
-		format->bsize += token->type;
+		format->bsize += (token->type == T_DIR ? 
+			(opinfo->dir_size? 2 : DIR_SIZE) : token->type);
 		arg_num++;
 		token = token->next;
 	}
@@ -71,7 +74,6 @@ char	*put_argus_to_format(t_token *token, t_format *format, t_dict *op_dict)
 **		errlog, null if no error 
 **	
 **	1. put operation to format
-**	2. add bsize to 2, +1 op & +1 byte code
 **	3. put args to format
 **	4. set address, if it's first, address = 0, 
 **		if not first, address = last address + last bsize
@@ -85,7 +87,6 @@ char	*ins_new_format(t_token *token, t_queue *formats, t_dict *op_dict)
 	bzero(&f, sizeof(t_format));
 	errlog = NULL;
 	f.op = ft_strdup(token->data);
-	f.bsize += 2;
 	errlog = put_argus_to_format(token->next, &f, op_dict);
 	if (formats->last == NULL)
 		f.address = 0;
@@ -108,13 +109,11 @@ char	*ins_new_format(t_token *token, t_queue *formats, t_dict *op_dict)
 **		errlog, null if no error 
 **	
 **	1. put operation to pre format
-**	2. add bsize to 2, +1 op & +1 byte code
-**	3. put args to format
+**	2. put args to format
 */
 char	*ins_pre_format(t_token *token, t_format *pre_format, t_dict *op_dict)
 {
 	pre_format->op = ft_strdup(token->data);
-	pre_format->bsize += 2;
 	return(put_argus_to_format(token->next, pre_format, op_dict));
 }
 

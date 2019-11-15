@@ -15,7 +15,7 @@
 # include "../../includes/op.h"
 
 /*
-**	write_int
+**	write_int_move_pos
 **	write 32bits integer to the current positon of string, 
 **	will move position at the same time
 **
@@ -65,6 +65,101 @@ void head_encoder(char **pos, t_asm *asms)
 	ft_strcpy(*pos, asms->header.comment);
 	(*pos) += COMMENT_LENGTH + 4;
 }
+
+int get_code_bytes(t_format	*format, t_op *opinfo)
+{
+	int i;
+	int code_bytes;
+
+	code_bytes = 0;
+	i = 0;
+	
+	printf("op: %s\n", opinfo->name);
+	while (i < MAX_ARGS_NUMBER - 1)
+	{
+		// test
+		// print_bits(code_bytes);
+		// printf("\n");
+
+		if (format->args[i] != NULL)
+		{
+			// test
+			// printf("i: %d, nb: %d\n", i, opinfo->nb_arg);
+			if (format->args[i]->type == T_REG)
+				code_bytes += REG_CODE;
+			else if (format->args[i]->type == T_DIR)
+				code_bytes += DIR_CODE;
+			else if (format->args[i]->type == T_IND)
+				code_bytes += IND_CODE;
+		}
+		code_bytes = code_bytes << 2;
+		i++;
+	}
+	return (code_bytes);
+}
+
+void encode_regular(char *arg, char **pos, int size)
+{
+	int num;
+
+	if (!arg)
+		return ;
+	num = 0;
+	if (!ft_isdigit_str(arg))
+		return ;
+	num = ft_atoi(arg);
+	write_int_move_pos(pos, num, size);
+}
+
+// TODO: error check
+// TODO: 5 arguments!
+void encode_label(char *arg, char **pos, int size, t_format *format, t_asm *asms)
+{
+	int address_offset;
+	int *la;
+
+	address_offset = 0;
+	if (!arg)
+		return ;
+	// check if label match
+	printf("looking for label: %s\n", arg);
+	if ((la = dict_get(asms->label_dict, arg)) == NULL)
+		return ; // label not found
+	address_offset = *la - format->address;
+	printf("label %s locate at address: %d, currrent offset: %d\n", arg, *la, address_offset);
+	write_int_move_pos(pos, address_offset, size);
+}
+
+// TODO: error check
+void encode_register(char *arg, char **pos, int size)
+{
+	int reg_num;
+
+	if (!arg)
+		return ;
+	reg_num = 0;
+	if (!ft_isdigit_str(arg))
+		return ;
+	if ((reg_num = ft_atoi(arg)) > REG_NUMBER)
+		return ;	// errlog
+	write_int_move_pos(pos, reg_num, size);
+}
+
+// TODO: error check
+// TODO: Too many argumenets
+void arg_encoder(char *arg, char **pos, int size, t_format *format, t_asm *asms)
+{
+	printf("arg: %s\n", arg);
+	if (!arg)
+		return ;
+	if (*arg == 'r')
+		encode_register(arg + 1, pos, size);
+	else if (*arg == ':')
+		encode_label(arg + 1, pos, size, format, asms);
+	else
+		encode_regular(arg, pos, size);
+}
+
 /*
 **	ins_encoder
 **	encode instruction format to bytes, write to file
@@ -77,19 +172,37 @@ void head_encoder(char **pos, t_asm *asms)
 **	
 **	1. pop a instruction from formats, get the op from op_dict
 **	2. write opcode
-**	3. 
+**	3. write code bytes, some op don't need code bytes set to 0
 **	4. 
 */
-void ins_encoder(char **pos, t_asm *asms)
+void	ins_encoder(char **pos, t_asm *asms)
 {
 	t_format	*format;
-	t_op		*op;
+	t_op		*opinfo;
+	int			code_bytes;
+	int			i;
 
-	while (!qis_empty(asms->formats))
+	while (qis_empty(asms->formats) != TRUE)
 	{
 		format = qpop(asms->formats);
-		op = dict_get(asms->op_dict, format->op);
-		write_int_move_pos(pos, op->opcode, 1);
+		opinfo = dict_get(asms->op_dict, format->op);
+		write_int_move_pos(pos, opinfo->opcode, 1);	
+		code_bytes = get_code_bytes(format, opinfo);
+		printf("code bytes: %x\n", code_bytes);
+		// if don't need code_bytes, opinfo->code_bytes = 0 write 0 byte to file
+		write_int_move_pos(pos, code_bytes, opinfo->code_bytes);
 		
+		i = 0;
+		while (i < opinfo->nb_arg)
+		{
+			if (format->args[i]->type == T_REG)
+				arg_encoder(format->args[i]->data, pos, 1, format, asms);
+			else if (format->args[i]->type == T_DIR)
+				arg_encoder(format->args[i]->data + 1, pos, DIR_SIZE -
+					opinfo->dir_size * 2, format, asms);
+			else if (format->args[i]->type == T_IND)
+				arg_encoder(format->args[i]->data, pos, 2, format, asms);
+			i++;
+		}
 	}
 }

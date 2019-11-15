@@ -49,6 +49,7 @@ char	*get_instructions(int fd, t_asm *asms);
 **	helper.c
 */
 void	print_format(t_asm *asms);
+void	print_bits(unsigned char octet);
 /*
 **	encoder.c
 */

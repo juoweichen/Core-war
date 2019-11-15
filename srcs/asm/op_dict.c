@@ -24,6 +24,16 @@
 **	
 **	1. grap op array from op.c
 **	2. memcpy to asms op table
+** 
+**	op_name: operation name
+**	nb_arg: request argument number
+**	args: argument types
+**	opcode: operation code, from 1~16
+**	cycle: wait cycle time before execution
+**	description: description
+**	code_bytes: is required code type
+**	dir_size: 1 if T_dir is 2 bytes, 0 if 4 bytes
+**	NOTE: Can add some more if needed
 */
 void 	create_optable(t_asm *asm_s)
 {
@@ -60,6 +70,7 @@ void 	create_optable(t_asm *asm_s)
 **	init_asm()
 **	bzero main structure asms, create op dictionary
 **	Instead of op table, we use op dictionary for searching op info.
+**	op_dict key : value => <char *>op_name : <t_op *>op_info
 **	
 **	input: 
 **		<t_asm>	asm main structure

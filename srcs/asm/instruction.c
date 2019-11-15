@@ -55,7 +55,7 @@ char 	*format_instruction(t_token *token, t_asm *asms)
 **	return: 
 **		<char *> errlog, if not error return NULL
 **	
-**	1. if there's not queue, create it
+**	1. if there's not queue or no dict, create it
 **	2. put label to local format, I try not to use too much malloc
 **	3. set address, if it's first, address = 0, 
 **		if not first, address = last address + last bsize
@@ -70,12 +70,15 @@ char	*format_label(t_token *token, t_asm *asms)
 	ft_bzero(&f, sizeof(t_format));
 	if (asms->formats == NULL)
 		asms->formats = queue_init();
-	f.label = ft_strdup(token->data);
+	if (asms->label_dict == NULL)
+		asms->label_dict = dict_init();
+	f.label = ft_strdup(ft_strctrim(token->data, ':'));
 	if (asms->formats->last == NULL)
 		f.address = 0;
 	else
 		f.address = ((t_format *)asms->formats->last->data)->address +
 			((t_format *)asms->formats->last->data)->bsize;
+	dict_add(asms->label_dict, f.label, &f.address, sizeof(int *));
 	qpush(asms->formats, &f, sizeof(t_format));
 	return (NULL);
 }

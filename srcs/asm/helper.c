@@ -16,12 +16,14 @@
 
 void	print_format(t_asm *asms)
 {
+	t_qnode *qp;
 	t_format *f;
 	int i;
-
-	while (!qis_empty(asms->formats))
+	
+	qp = asms->formats->first;
+	while (qp != NULL)
 	{
-		f = qpop(asms->formats);
+		f = qp->data;
 		if (f == NULL)
 			continue ;
 		printf("label: %s", f->label);
@@ -33,5 +35,20 @@ void	print_format(t_asm *asms)
 				printf("%s, ", f->args[i++]->data);
 		}
 		printf(" | address: %d | bsize: %d\n", f->address, f->bsize);
+		qp = qp->next;
+	}
+}
+
+void	print_bits(unsigned char octet)
+{
+	int shift = 7;
+	unsigned char mask = 1;
+	char out;
+
+	while (shift >= 0)
+	{
+		out = ((octet >> shift) & mask) + '0';
+		write(1, &out, 1);
+		--shift;
 	}
 }
